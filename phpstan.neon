@@ -1,0 +1,11 @@
+includes:
+	- vendor/phpstan/phpstan-mockery/extension.neon
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - tests/Pest.php
+    ignoreErrors:
+        - '#Call to an undefined method Pest\\Expectation\|Pest\\Support\\Extendable::[a-zA-Z0-9\\_]+.#'
