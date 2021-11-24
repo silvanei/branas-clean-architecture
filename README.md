@@ -5,7 +5,7 @@ composer install
 
 ### Executar os testes
 ```
-composer composer test
+composer test
 ```
 
 ### Executar os testes com cobertura
