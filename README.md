@@ -1,7 +1,9 @@
 # Clean Code e Clean Architecture - Turma 4
 
 ### Instalar dependências
+```
 composer install
+```
 
 ### Executar os testes
 ```
