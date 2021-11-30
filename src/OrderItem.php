@@ -7,9 +7,9 @@ namespace Silvanei\BranasCleanArchitecture;
 final class OrderItem
 {
     public function __construct(
-        public readonly string $description,
-        public readonly int|float $price,
-        public readonly int $quantity,
+        public readonly int $idItem,
+        private int|float $price,
+        private int $quantity,
     ) {
     }
 

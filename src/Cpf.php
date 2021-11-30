@@ -26,9 +26,9 @@ final class Cpf
         }
         $firstVerifierDigit = $this->calculateDigit($cleanedValue, self::FACTOR_FIRST_VIRIFIER_DIGIT);
         $secondVerifierDigit = $this->calculateDigit($cleanedValue, self::FACTOR_SECOND_VIRIFIER_DIGIT);
-        $verifierDigit = $this->extractVerifierDigit($cleanedValue);
         $calculatedVerifiedDigit = $firstVerifierDigit . $secondVerifierDigit;
-        if ($verifierDigit != $calculatedVerifiedDigit) {
+        $verifierDigit = $this->extractVerifierDigit($cleanedValue);
+        if ($verifierDigit !== $calculatedVerifiedDigit) {
             throw new InvalidArgumentException('Invalid CPF');
         }
         $this->value = $cleanedValue;
@@ -49,7 +49,7 @@ final class Cpf
     {
         $cpf = str_split($cpf);
         [$fistDigit] = $cpf;
-        $cpf = array_filter($cpf, fn($c) => $c === $fistDigit);
+        $cpf = array_filter($cpf, fn($digit) => $digit === $fistDigit);
         return count($cpf) === self::CPF_VALID_LENGTH;
     }
 
@@ -66,8 +66,8 @@ final class Cpf
         return ($rest < 2) ? 0 : (self::CPF_VALID_LENGTH - $rest);
     }
 
-    private function extractVerifierDigit(string $cpf): int
+    private function extractVerifierDigit(string $cpf): string
     {
-        return (int)substr($cpf, strlen($cpf) - 2, strlen($cpf));
+        return substr($cpf, strlen($cpf) - 2, strlen($cpf));
     }
 }

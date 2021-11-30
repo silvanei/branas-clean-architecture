@@ -9,6 +9,15 @@ test('Deve validar um cpf', function () {
     expect($cpf->value)->toBe("93541134780");
 });
 
+test('Deve validar um cpf com digito verificador 00', function () {
+    $cpf = new Cpf("987.654.321-00");
+    expect($cpf->value)->toBe("98765432100");
+});
+
+test('Deve tentar criar um cpf inválido com letras', function () {
+    expect(fn() => new Cpf("123a456b789c99"))->toThrow(InvalidArgumentException::class, 'Invalid CPF');
+});
+
 test('Deve tentar criar um cpf inválido', function () {
     expect(fn() => new Cpf("123.456.789-99"))->toThrow(InvalidArgumentException::class, 'Invalid CPF');
 });

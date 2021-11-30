@@ -6,25 +6,24 @@ namespace Silvanei\BranasCleanArchitecture;
 
 final class Order
 {
-    /** @var array<OrderItem>  */
+    /** @var OrderItem[]  */
     private array $items = [];
 
     public function __construct(public readonly Cpf $cpf, private ?Coupon $coupon = null)
     {
     }
 
-    public function add(OrderItem $orderItem): void
+    public function add(Item $item, int $quantity): void
     {
-        $this->items[] = $orderItem;
+        $this->items[] = new OrderItem($item->id, $item->price, $quantity);
     }
 
     public function total(): int|float
     {
-        $total = array_reduce(
-            array: $this->items,
-            callback: fn($total, OrderItem $item) => $total + $item->total(),
-            initial: 0
-        );
+        $total = 0;
+        foreach ($this->items as $orderItem) {
+            $total += $orderItem->total();
+        };
         if ($this->coupon) {
             return $this->coupon->discount($total);
         }
