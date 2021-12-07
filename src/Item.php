@@ -11,6 +11,20 @@ final class Item
         public readonly string $category,
         public readonly string $description,
         public readonly int|float $price,
+        public readonly int $width,
+        public readonly int $height,
+        public readonly int $depth,
+        public readonly int|float $weight,
     ) {
+    }
+
+    public function volume(): int|float
+    {
+        return ($this->width * $this->height * $this->depth) / 1_000_000;
+    }
+
+    public function density(): int
+    {
+        return (int)($this->weight / $this->volume());
     }
 }

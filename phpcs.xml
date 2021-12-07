@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<ruleset name="Laminas Coding Standard">
-    <description>Laminas Coding Standard</description>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="branas-clean-architecture" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    <description>MySource Coding Standard</description>
 
     <!-- display progress -->
     <arg value="p"/>
     <arg name="colors"/>
-    <arg name="extensions" value="php,dist"/>
+    <arg name="extensions" value="php"/>
 
     <!-- inherit rules from: -->
     <rule ref="PSR12"/>
@@ -21,6 +21,11 @@
             <property name="ignoreBlankLines" value="false"/>
         </properties>
     </rule>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="150"/>
+        </properties>
+    </rule>
     <rule ref="PSR1.Files.SideEffects">
         <exclude-pattern>tests/Pest.php</exclude-pattern>
     </rule>
@@ -28,6 +33,4 @@
     <!-- Paths to check -->
     <file>src</file>
     <file>tests</file>
-
-    <exclude-pattern>src/*_before.php</exclude-pattern>
 </ruleset>

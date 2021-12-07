@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.1",
+        "ext-ds": "*"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
@@ -27,10 +28,10 @@
     "scripts": {
         "check": [
             "@phpstan",
-            "@cs-check",
+            "@phpcs",
             "@test"
         ],
-        "cs-check": "phpcs",
+        "phpcs": "phpcs",
         "phpstan": "phpstan analyse",
         "test": "pest",
         "test-coverage": "XDEBUG_MODE=coverage pest --coverage --coverage-html coverage/"
