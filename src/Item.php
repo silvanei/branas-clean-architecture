@@ -20,7 +20,7 @@ final class Item
 
     public function volume(): int|float
     {
-        return ($this->width * $this->height * $this->depth) / 1_000_000;
+        return ($this->width / 100 * $this->height / 100 * $this->depth / 100);
     }
 
     public function density(): int
