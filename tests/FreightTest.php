@@ -11,8 +11,6 @@ test('Deve calcular o valor do frete com base nas dimensões e o peso dos produt
 
 test('Deve retornar o preço mínimo do frete caso ele seja superior ao valor calculado', function () {
     $freight = new DefaultFreightCalculator();
-    $items = [
-        new Item(1, 'Eletrônico', 'Camera', 1000, width: 20, height: 15, depth: 10, weight: 1),
-    ];
-    expect($freight->calculate(...$items))->toBe(10);
+    $item = new Item(1, 'Eletrônico', 'Camera', 1000, width: 20, height: 15, depth: 10, weight: 1);
+    expect($freight->calculate($item))->toBe(10);
 });

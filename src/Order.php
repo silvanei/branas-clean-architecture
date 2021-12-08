@@ -30,6 +30,9 @@ final class Order
 
     public function addCoupon(Coupon $coupon): void
     {
+        if ($coupon->isExpired($this->date)) {
+            return;
+        }
         $this->coupon = $coupon;
     }
 
@@ -45,7 +48,7 @@ final class Order
             $total += $orderItem->total();
         }
         if ($this->coupon) {
-            return $this->coupon->discount($total, $this->date);
+            $total -= $this->coupon->calculateDiscount($total, $this->date);
         }
         $total += $this->freight;
         return $total;

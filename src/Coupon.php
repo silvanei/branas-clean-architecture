@@ -15,11 +15,16 @@ final class Coupon
     ) {
     }
 
-    public function discount(int|float $value, DateTimeImmutable $today = new DateTimeImmutable()): int|float
+    public function calculateDiscount(int|float $value, DateTimeImmutable $today = new DateTimeImmutable()): int|float
     {
-        if ($this->expireDate >= $today) {
-            return $value - (($value * $this->percentage) / 100);
+        if ($this->isExpired($today)) {
+            return 0;
         }
-        return $value;
+        return ($value * $this->percentage) / 100;
+    }
+
+    public function isExpired(DateTimeImmutable $today): bool
+    {
+        return $this->expireDate < $today;
     }
 }
