@@ -1,6 +1,6 @@
 <?php
 
-use Silvanei\BranasCleanArchitecture\Item;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Item;
 
 it('Deve calcular o volume e dencidade com base nas dimensões do produto', function (Item $item, int|float $volume, int|float $density) {
     expect($item->volume())->toBe($volume);

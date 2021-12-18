@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture;
+namespace Silvanei\BranasCleanArchitecture\Domain\Entity;
 
 final class OrderItem
 {

@@ -1,7 +1,7 @@
 <?php
 
-use Silvanei\BranasCleanArchitecture\DefaultFreightCalculator;
-use Silvanei\BranasCleanArchitecture\Item;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\DefaultFreightCalculator;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Item;
 
 test('Deve calcular o valor do frete com base nas dimensões e o peso dos produtos', function () {
     $freight = new DefaultFreightCalculator();

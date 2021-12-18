@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Silvanei\BranasCleanArchitecture\Cpf;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Cpf;
 
 test('Deve validar um cpf', function () {
     $cpf = new Cpf("935.411.347-80");

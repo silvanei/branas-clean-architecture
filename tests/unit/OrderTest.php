@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Silvanei\BranasCleanArchitecture\Coupon;
-use Silvanei\BranasCleanArchitecture\Cpf;
-use Silvanei\BranasCleanArchitecture\Item;
-use Silvanei\BranasCleanArchitecture\Order;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Coupon;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Cpf;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Item;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\Order;
 
 test('Deve criar um pedido com cpf válido', function () {
     $order = new Order(new Cpf('935.411.347-80'), new DateTimeImmutable('2021-11-30T00:00:00'));

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture;
+namespace Silvanei\BranasCleanArchitecture\Domain\Entity;
 
+use Ds\Set;
 use InvalidArgumentException;
 
 final class Cpf
@@ -47,10 +48,9 @@ final class Cpf
 
     private function areAllDigitsEqual(string $cpf): bool
     {
-        $cpf = str_split($cpf);
-        [$fistDigit] = $cpf;
-        $cpf = array_filter($cpf, fn($digit) => $digit === $fistDigit);
-        return count($cpf) === self::CPF_VALID_LENGTH;
+        $arrayCpf = str_split($cpf);
+        $setCpf = new Set($arrayCpf);
+        return $setCpf->count() === 1;
     }
 
     private function calculateDigit(string $cpf, int $factor): int
