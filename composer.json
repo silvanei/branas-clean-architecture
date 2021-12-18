@@ -2,6 +2,7 @@
     "name": "silvanei/branas-clean-architecture",
     "description": "Projeto desenvolvido durante curso de clean code e clean architecture do Rodrigo Branas",
     "type": "project",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Silvanei\\BranasCleanArchitecture\\": "src/"

@@ -28,9 +28,12 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
     - name: Linter
       run: composer phpcs
+
     - name: Static analyzer
       run: composer phpstan
+
     - name: Test
       run: composer test
