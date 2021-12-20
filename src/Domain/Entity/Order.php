@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Silvanei\BranasCleanArchitecture\Domain\Entity;
 
 use DateTimeImmutable;
+use Decimal\Decimal;
 use Ds\Vector;
 
 final class Order
@@ -12,7 +13,7 @@ final class Order
     /** @var Vector<OrderItem> */
     private Vector $items;
     private ?Coupon $coupon = null;
-    private int|float $freight = 0;
+    private Decimal $freight;
 
     public function __construct(
         public readonly Cpf $cpf,
@@ -20,11 +21,12 @@ final class Order
         private FreightCaculator $freightCaculator = new DefaultFreightCalculator()
     ) {
         $this->items = new Vector();
+        $this->freight = new Decimal(0);
     }
 
     public function add(Item $item, int $quantity): void
     {
-        $this->freight += $this->freightCaculator->calculate($item) * $quantity;
+        $this->freight = $this->freight->add($this->freightCaculator->calculate($item)->mul($quantity));
         $this->items->push(new OrderItem($item->id, $item->price, $quantity));
     }
 
@@ -36,21 +38,20 @@ final class Order
         $this->coupon = $coupon;
     }
 
-    public function freight(): int|float
+    public function freight(): Decimal
     {
         return $this->freight;
     }
 
-    public function total(): int|float
+    public function total(): Decimal
     {
-        $total = 0;
+        $total = new Decimal(0);
         foreach ($this->items as $orderItem) {
-            $total += $orderItem->total();
+            $total = $total->add($orderItem->total());
         }
         if ($this->coupon) {
-            $total -= $this->coupon->calculateDiscount($total, $this->date);
+            $total = $total->sub($this->coupon->calculateDiscount($total, $this->date));
         }
-        $total += $this->freight;
-        return $total;
+        return $total->add($this->freight);
     }
 }

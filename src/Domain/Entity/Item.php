@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Silvanei\BranasCleanArchitecture\Domain\Entity;
 
+use Decimal\Decimal;
+
 final class Item
 {
     public function __construct(
         public readonly int $id,
         public readonly string $category,
         public readonly string $description,
-        public readonly int|float $price,
+        public readonly Decimal $price,
         public readonly int $width,
         public readonly int $height,
         public readonly int $depth,
