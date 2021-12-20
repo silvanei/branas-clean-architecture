@@ -38,6 +38,6 @@ final class PlaceOrder
         }
         $this->orderRepository->save($order);
         $total = $order->total();
-        return new PlaceOrderOutput($total);
+        return new PlaceOrderOutput($total->toFloat());
     }
 }

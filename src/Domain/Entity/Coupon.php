@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Silvanei\BranasCleanArchitecture\Domain\Entity;
 
 use DateTimeImmutable;
+use Decimal\Decimal;
 
 final class Coupon
 {
@@ -15,12 +16,12 @@ final class Coupon
     ) {
     }
 
-    public function calculateDiscount(int|float $value, DateTimeImmutable $today = new DateTimeImmutable()): int|float
+    public function calculateDiscount(Decimal $value, DateTimeImmutable $today = new DateTimeImmutable()): Decimal
     {
         if ($this->isExpired($today)) {
-            return 0;
+            return new Decimal(0);
         }
-        return ($value * $this->percentage) / 100;
+        return $value->mul($this->percentage)->div(100);
     }
 
     public function isExpired(DateTimeImmutable $today): bool
