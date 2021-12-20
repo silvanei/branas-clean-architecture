@@ -12,7 +12,7 @@ final class Coupon
     public function __construct(
         public readonly string $code,
         private int $percentage,
-        private DateTimeImmutable $expireDate = new DateTimeImmutable()
+        private ?DateTimeImmutable $expireDate = null
     ) {
     }
 
@@ -24,8 +24,16 @@ final class Coupon
         return $value->mul($this->percentage)->div(100);
     }
 
-    public function isExpired(DateTimeImmutable $today): bool
+    public function isExpired(DateTimeImmutable $today = new DateTimeImmutable()): bool
     {
+        if (! $this->expireDate) {
+            return false;
+        }
         return $this->expireDate < $today;
+    }
+
+    public function isValid(DateTimeImmutable $today = new DateTimeImmutable()): bool
+    {
+        return ! $this->isExpired($today);
     }
 }
