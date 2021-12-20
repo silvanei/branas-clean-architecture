@@ -1,0 +1,16 @@
+{
+    "source": {
+        "directories": [
+            "src/Application",
+            "src/Domain"
+        ]
+    },
+    "logs": {
+        "text": "data/infection.log"
+    },
+    "mutators": {
+        "@default": true,
+        "@cast": false
+    },
+    "testFramework":"pest"
+}

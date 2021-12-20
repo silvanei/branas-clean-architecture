@@ -20,7 +20,7 @@ final class Cpf
     {
         $cleanedValue = $this->clean($value);
         if (! $this->isValidLength($cleanedValue)) {
-            throw new InvalidArgumentException('Invalid CPF');
+            throw new InvalidArgumentException('Invalid CPF length');
         }
         if ($this->areAllDigitsEqual($cleanedValue)) {
             throw new InvalidArgumentException('Invalid CPF');
@@ -30,7 +30,7 @@ final class Cpf
         $calculatedVerifiedDigit = $firstVerifierDigit . $secondVerifierDigit;
         $verifierDigit = $this->extractVerifierDigit($cleanedValue);
         if ($verifierDigit !== $calculatedVerifiedDigit) {
-            throw new InvalidArgumentException('Invalid CPF');
+            throw new InvalidArgumentException('Invalid CPF verifier digit');
         }
         $this->value = $cleanedValue;
     }
