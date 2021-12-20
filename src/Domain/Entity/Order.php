@@ -14,14 +14,17 @@ final class Order
     private Vector $items;
     private ?Coupon $coupon = null;
     private Decimal $freight;
+    private OrderCode $orderCode;
 
     public function __construct(
         public readonly Cpf $cpf,
         private DateTimeImmutable $date,
-        private FreightCaculator $freightCaculator = new DefaultFreightCalculator()
+        private FreightCaculator $freightCaculator = new DefaultFreightCalculator(),
+        int $sequence = 1,
     ) {
         $this->items = new Vector();
         $this->freight = new Decimal(0);
+        $this->orderCode = new OrderCode($this->date, $sequence);
     }
 
     public function add(Item $item, int $quantity): void
@@ -41,6 +44,11 @@ final class Order
     public function freight(): Decimal
     {
         return $this->freight;
+    }
+
+    public function code(): string
+    {
+        return $this->orderCode->value;
     }
 
     public function total(): Decimal

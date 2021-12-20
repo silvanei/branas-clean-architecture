@@ -6,6 +6,7 @@ namespace Silvanei\BranasCleanArchitecture\Application\UseCase;
 
 use InvalidArgumentException;
 use Silvanei\BranasCleanArchitecture\Domain\Entity\Cpf;
+use Silvanei\BranasCleanArchitecture\Domain\Entity\DefaultFreightCalculator;
 use Silvanei\BranasCleanArchitecture\Domain\Entity\Order;
 use Silvanei\BranasCleanArchitecture\Domain\Repository\CouponRepository;
 use Silvanei\BranasCleanArchitecture\Domain\Repository\ItemRepository;
@@ -22,7 +23,8 @@ final class PlaceOrder
 
     public function execute(PlaceOrderInput $input): PlaceOrderOutput
     {
-        $order = new Order(new Cpf($input->cpf), $input->date);
+        $sequence = $this->orderRepository->nextSequence();
+        $order = new Order(cpf: new Cpf($input->cpf), date: $input->date, freightCaculator: new DefaultFreightCalculator(), sequence: $sequence);
         foreach ($input->orderItems as $orderItem) {
             $item = $this->itemRepository->findById($orderItem->idItem);
             if (! $item) {
@@ -38,6 +40,6 @@ final class PlaceOrder
         }
         $this->orderRepository->save($order);
         $total = $order->total();
-        return new PlaceOrderOutput($total->toFloat());
+        return new PlaceOrderOutput($order->code(), $total->toFloat());
     }
 }

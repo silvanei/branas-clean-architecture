@@ -16,4 +16,9 @@ final class OrderRepositoryMemory implements OrderRepository
     {
         $this->orders[] = $order;
     }
+
+    public function nextSequence(): int
+    {
+        return count($this->orders) + 1;
+    }
 }

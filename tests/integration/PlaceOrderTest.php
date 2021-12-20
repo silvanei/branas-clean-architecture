@@ -44,3 +44,22 @@ test('Deve fazer uma pedido com frete', function () {
     $output = $placeOrder->execute($placeOrderInput);
     expect($output->total)->toBe(6350.0);
 });
+
+test('Deve fazer uma pedido com codigo', function () {
+    $itemRepository = new ItemRepositoryMemory();
+    $couponRepository = new CouponRepositoryMemory();
+    $orderRepository = new OrderRepositoryMemory();
+    $placeOrder = new PlaceOrder($itemRepository, $couponRepository, $orderRepository);
+    $placeOrderInput = new PlaceOrderInput(
+        cpf: '935.411.347-80',
+        orderItems: [
+                 new PlaceOrderInputItem(idItem: 4, quantity: 1),
+                 new PlaceOrderInputItem(idItem: 5, quantity: 1),
+                 new PlaceOrderInputItem(idItem: 6, quantity: 3),
+             ],
+        date: new DateTimeImmutable('2021-12-20'),
+        coupon: 'VALE20',
+    );
+    $output = $placeOrder->execute($placeOrderInput);
+    expect($output->code)->toBe('202100000001');
+});

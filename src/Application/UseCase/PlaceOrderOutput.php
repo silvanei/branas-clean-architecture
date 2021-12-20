@@ -6,7 +6,7 @@ namespace Silvanei\BranasCleanArchitecture\Application\UseCase;
 
 final class PlaceOrderOutput
 {
-    public function __construct(public readonly int|float $total)
+    public function __construct(public readonly string $code, public readonly int|float $total)
     {
     }
 }
