@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture\Application\UseCase;
+namespace Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder;
 
 use InvalidArgumentException;
 use Silvanei\BranasCleanArchitecture\Domain\Entity\Cpf;

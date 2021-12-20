@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture\Application\UseCase;
+namespace Silvanei\BranasCleanArchitecture\Application\UseCase\SimulateFreight;
 
-final class PlaceOrderInputItem
+final class SimulateFreightInputItem
 {
     public function __construct(public readonly int $idItem, public readonly int $quantity)
     {

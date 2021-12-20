@@ -1,8 +1,8 @@
 <?php
 
-use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder;
-use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrderInput;
-use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrderInputItem;
+use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrder;
+use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInput;
+use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInputItem;
 use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\CouponRepositoryMemory;
 use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\ItemRepositoryMemory;
 use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\OrderRepositoryMemory;
