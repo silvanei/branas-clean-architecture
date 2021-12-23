@@ -58,7 +58,7 @@ jobs:
 
     - name: Create database
       run: |
-        psql -f database/create.sql postgresql://root:root@postgres.docker.local:5432/dev_test 
+        psql -f database/create.sql postgresql://root:root@localhost:5432/dev_test 
 
     - name: Test
       run: composer test
