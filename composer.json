@@ -16,6 +16,7 @@
     ],
     "require": {
         "php": ">=8.1",
+        "ext-pdo": "*",
         "ext-ds": "*",
         "ext-decimal": "*"
     },
@@ -38,5 +39,11 @@
         "phpstan": "phpstan analyse",
         "test": "pest",
         "test-coverage": "XDEBUG_MODE=coverage pest --coverage --coverage-html coverage/"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "infection/extension-installer": true
+        }
     }
 }

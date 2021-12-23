@@ -10,8 +10,8 @@ final class OrderItem
 {
     public function __construct(
         public readonly int $idItem,
-        private Decimal $price,
-        private int $quantity,
+        public readonly Decimal $price,
+        public readonly int $quantity,
     ) {
     }
 

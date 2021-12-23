@@ -11,6 +11,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:14.1-alpine3.14
+        env:
+          POSTGRES_DB: dev_test
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
     - uses: actions/checkout@v2
 
@@ -40,6 +55,10 @@ jobs:
 
     - name: Static analyzer
       run: composer phpstan
+
+    - name: Create database
+      run: |
+        psql -f database/create.sql postgresql://root:root@localhost:5432/dev_test 
 
     - name: Test
       run: composer test

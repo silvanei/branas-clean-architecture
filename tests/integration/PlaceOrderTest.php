@@ -3,15 +3,24 @@
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrder;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInput;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInputItem;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\CouponRepositoryMemory;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\ItemRepositoryMemory;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Memory\OrderRepositoryMemory;
+use Silvanei\BranasCleanArchitecture\Infra\Database\Connection;
+use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\CouponRepositoryDatabase;
+use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\ItemRepositoryDatabase;
+use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\OrderRepositoryDatabase;
 
 beforeEach(function () {
-    $itemRepository = new ItemRepositoryMemory();
-    $couponRepository = new CouponRepositoryMemory();
-    $this->orderRepository = new OrderRepositoryMemory();
+    $connection = Connection::getInstance();
+    $itemRepository = new ItemRepositoryDatabase($connection);
+    $couponRepository = new CouponRepositoryDatabase($connection);
+    $this->orderRepository = new OrderRepositoryDatabase($connection);
     $this->placeOrder = new PlaceOrder($itemRepository, $couponRepository, $this->orderRepository);
+});
+
+afterEach(function () {
+    $connection = Connection::getInstance();
+    $connection->query('truncate table ccca.order_item restart identity');
+    $connection->query('truncate table ccca.order restart identity');
+    $connection->query("select setval('ccca.order_sequence', 1, false)");
 });
 
 test('Deve fazer uma pedido', function () {
@@ -41,7 +50,7 @@ test('Deve fazer uma pedido e validar o repository', function () {
     $this->placeOrder->execute($placeOrderInput);
     $this->placeOrder->execute($placeOrderInput);
     $this->placeOrder->execute($placeOrderInput);
-    expect($this->orderRepository->orders)->toHaveCount(3);
+    expect($this->orderRepository->count())->toBe(3);
 });
 
 test('Deve fazer uma pedido com cupom de desconto', function () {

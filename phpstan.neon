@@ -10,3 +10,4 @@ parameters:
     ignoreErrors:
         - '#Call to an undefined method Pest\\Expectation\|Pest\\Support\\Extendable::[a-zA-Z0-9\\_]+.#'
         - '#Undefined variable: \$this#'
+        - '#Parameter \#2 \$className of method PDOStatement::setFetchMode\(\) expects int\|object, string given.#'
