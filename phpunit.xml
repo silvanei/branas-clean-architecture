@@ -15,7 +15,7 @@
         </include>
     </coverage>
     <php>
-        <env name="PDO_DSN" value="pgsql:host=postgress.docker.local;port=5432;dbname=dev_test;"/>
+        <env name="PDO_DSN" value="pgsql:host=localhost;port=5432;dbname=dev_test;"/>
         <env name="PDO_USER" value="root"/>
         <env name="PDO_PASS" value="root"/>
     </php>
