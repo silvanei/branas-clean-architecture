@@ -18,7 +18,15 @@
         "php": ">=8.1",
         "ext-pdo": "*",
         "ext-ds": "*",
-        "ext-decimal": "*"
+        "ext-decimal": "*",
+        "mezzio/mezzio": "^3.8",
+        "laminas/laminas-servicemanager": "^3.10",
+        "mezzio/mezzio-fastroute": "^3.4",
+        "laminas/laminas-diactoros": "^2.8",
+        "mezzio/mezzio-helpers": "^5.7",
+        "laminas/laminas-config-aggregator": "^1.7",
+        "laminas/laminas-serializer": "^2.12",
+        "laminas/laminas-cli": "^1.4"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
@@ -27,9 +35,14 @@
         "pestphp/pest-plugin-mock": "^1.0",
         "pestphp/pest-plugin-faker": "^1.0",
         "phpstan/phpstan-mockery": "^1.0",
-        "infection/infection": "^0.25.5"
+        "infection/infection": "^0.25.5",
+        "laminas/laminas-component-installer": "^2.6",
+        "laminas/laminas-development-mode": "^3.6"
     },
     "scripts": {
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
         "check": [
             "@phpstan",
             "@phpcs",
@@ -38,7 +51,7 @@
         "phpcs": "phpcs",
         "phpstan": "phpstan analyse",
         "test": "pest",
-        "test-coverage": "XDEBUG_MODE=coverage pest --coverage --coverage-html coverage/"
+        "test-coverage": "XDEBUG_MODE=coverage pest --coverage --coverage-html data/coverage/"
     },
     "config": {
         "allow-plugins": {

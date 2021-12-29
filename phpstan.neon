@@ -7,6 +7,8 @@ parameters:
         - tests
     excludePaths:
         - tests/Pest.php
+    scanFiles:
+        - tests/Pest.php
     ignoreErrors:
         - '#Call to an undefined method Pest\\Expectation\|Pest\\Support\\Extendable::[a-zA-Z0-9\\_]+.#'
         - '#Undefined variable: \$this#'
