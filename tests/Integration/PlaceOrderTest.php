@@ -3,21 +3,15 @@
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrder;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInput;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInputItem;
-use Silvanei\BranasCleanArchitecture\Infra\Database\Connection;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\CouponRepositoryDatabase;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\ItemRepositoryDatabase;
-use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\OrderRepositoryDatabase;
+use Silvanei\BranasCleanArchitecture\Domain\Repository\OrderRepository;
 
 beforeEach(function () {
-    $connection = Connection::getInstance();
-    $itemRepository = new ItemRepositoryDatabase($connection);
-    $couponRepository = new CouponRepositoryDatabase($connection);
-    $this->orderRepository = new OrderRepositoryDatabase($connection);
-    $this->placeOrder = new PlaceOrder($itemRepository, $couponRepository, $this->orderRepository);
+    $this->placeOrder = loadObject(PlaceOrder::class);
+    $this->orderRepository = loadObject(OrderRepository::class);
 });
 
 afterEach(function () {
-    $connection = Connection::getInstance();
+    $connection = loadObject(PDO::class);
     $connection->query('truncate table ccca.order_item restart identity');
     $connection->query('truncate table ccca.order restart identity');
     $connection->query("select setval('ccca.order_sequence', 1, false)");

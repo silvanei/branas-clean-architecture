@@ -24,6 +24,11 @@
 |
 */
 
+use Mezzio\Application;
+use Mezzio\MiddlewareFactory;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 expect()->extend('toBeOne', function () {
     return $this->toBe(1);
 });
@@ -39,7 +44,28 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * @template T
+ * @param class-string<T> $className
+ * @return T
+ */
+function loadObject(string $className): mixed
 {
-    // ..
+    $container = require __DIR__ . '/../config/container.php';
+    if ($container->has($className)) {
+        return $container->get($className);
+    }
+    throw new InvalidArgumentException('Not found');
+}
+
+function handle(ServerRequestInterface $serverRequest): ResponseInterface
+{
+    $container = require __DIR__ . '/../config/container.php';
+    /** @var Application $app */
+    $app = $container->get(Application::class);
+    $factory = $container->get(MiddlewareFactory::class);
+    (require __DIR__ . '/../config/pipeline.php')($app, $factory, $container);
+    (require __DIR__ . '/../config/routes.php')($app, $factory, $container);
+
+    return $app->handle($serverRequest);
 }
