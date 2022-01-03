@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture\Application\Query;
+namespace Silvanei\BranasCleanArchitecture\Application\Query\Order;
 
 use Silvanei\BranasCleanArchitecture\Application\Dao\OrderDao;
-use Silvanei\BranasCleanArchitecture\Application\Dao\OrderItemsDto;
 
 final class GetOrder
 {
@@ -23,7 +22,6 @@ final class GetOrder
         if (! $orderItems) {
             return null;
         }
-        $orderItemsArray = array_map(fn(OrderItemsDto $itemsDto) => (array)$itemsDto, $orderItems);
-        return new GetOrderOutput($order->id, $order->code, $order->cpf, $order->freight, $orderItemsArray);
+        return new GetOrderOutput($order->id, $order->code, $order->cpf, $order->freight, $orderItems);
     }
 }

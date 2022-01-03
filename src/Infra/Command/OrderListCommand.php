@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Silvanei\BranasCleanArchitecture\Infra\Command;
 
-use Silvanei\BranasCleanArchitecture\Application\Query\GetOrder;
+use Silvanei\BranasCleanArchitecture\Application\Dao\OrderItemsDto;
+use Silvanei\BranasCleanArchitecture\Application\Query\Order\GetOrder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PlaceOrderCommand extends Command
+class OrderListCommand extends Command
 {
     public function __construct(private GetOrder $getOrder)
     {
-        parent::__construct('place-order:list');
+        parent::__construct('order:list');
     }
 
     protected function configure(): void
@@ -34,7 +35,8 @@ class PlaceOrderCommand extends Command
         $order = (array)$order;
         $orderItems = $order['orderItems'];
         unset($order['orderItems']);
-        $orders = array_map(fn($orderItems) => [...$order, ...$orderItems], $orderItems);
+        $orderItemsArray = array_map(fn(OrderItemsDto $itemsDto) => (array)$itemsDto, $orderItems);
+        $orders = array_map(fn($orderItems) => [...$order, ...$orderItems], $orderItemsArray);
         $table = new Table($output);
         $table->setHeaders(array_keys($orders[0]));
         $table->setRows($orders);

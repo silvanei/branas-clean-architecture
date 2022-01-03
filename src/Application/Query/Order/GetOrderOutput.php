@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Silvanei\BranasCleanArchitecture\Application\Query;
+namespace Silvanei\BranasCleanArchitecture\Application\Query\Order;
+
+use Silvanei\BranasCleanArchitecture\Application\Dao\OrderItemsDto;
 
 class GetOrderOutput
 {
@@ -11,7 +13,7 @@ class GetOrderOutput
         public readonly string $code,
         public readonly string $cpf,
         public readonly float $freight,
-        /** @var array{"category": string, "description": string, "price": float}[] */
+        /** @var OrderItemsDto[]*/
         public readonly array $orderItems,
     ) {
     }

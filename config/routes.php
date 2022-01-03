@@ -5,10 +5,10 @@ declare(strict_types=1);
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
-use Silvanei\BranasCleanArchitecture\Infra\Http\Action\GetOrderAction;
-use Silvanei\BranasCleanArchitecture\Infra\Http\Action\PlaceOrderAction;
-use Silvanei\BranasCleanArchitecture\Infra\Http\Action\SimulateFreightAction;
-use Silvanei\BranasCleanArchitecture\Infra\Http\Action\ValidateCouponAction;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\Item\ItemResource;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\Order\OrderResource;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\SimulateFreight\SimulateFreightResource;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ValidateCoupon\ValidateCouponResource;
 
 /**
  * FastRoute route configuration
@@ -29,8 +29,13 @@ use Silvanei\BranasCleanArchitecture\Infra\Http\Action\ValidateCouponAction;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->route('/order[/{code}]', GetOrderAction::class, ['GET']);
-    $app->route('/order', PlaceOrderAction::class, ['POST']);
-    $app->route('/simulate-freight', SimulateFreightAction::class, ['POST']);
-    $app->route('/validate-coupon/{code}', ValidateCouponAction::class, ['POST']);
+    $app->post('/rest/v1/simulate-freight', [SimulateFreightResource::class], 'post.rest.v1.simulate-freight');
+    $app->post('/rest/v1/validate-coupon/{code}', [ValidateCouponResource::class], 'post.rest.v1.validate-coupon.code');
+
+    $app->post('/rest/v1/order', [OrderResource::class], 'post.rest.v1.order');
+    $app->get('/rest/v1/order', [OrderResource::class], 'get.rest.v1.order');
+    $app->get('/rest/v1/order/{code}', [OrderResource::class], 'get.rest.v1.order.code');
+
+    $app->get('/rest/v1/item', [ItemResource::class], 'get.rest.v1.item');
+    $app->get('/rest/v1/item/{id}', [ItemResource::class], 'get.rest.v1.item.id');
 };

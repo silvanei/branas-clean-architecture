@@ -1,11 +1,11 @@
 <?php
 
-use Silvanei\BranasCleanArchitecture\Infra\Command\PlaceOrderCommand;
+use Silvanei\BranasCleanArchitecture\Infra\Command\OrderListCommand;
 
 return [
     'laminas-cli' => [
         'commands' => [
-            'place-order:list' => PlaceOrderCommand::class,
+            'order:list' => OrderListCommand::class,
         ],
     ],
 ];

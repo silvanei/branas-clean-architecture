@@ -28,35 +28,40 @@ test('Deve retornar um pedido pelo código', function () {
         coupon:     'VALE20'
     );
     $output = $this->placeOrder->execute($placeOrderInput);
-    $serverRequest = new ServerRequest(uri: "/order/{$output->code}", method: 'GET');
+    $serverRequest = new ServerRequest(uri: "/rest/v1/order/{$output->code}", method: 'GET');
     $response = handle($serverRequest);
-    expect($response->getHeaderLine('content-type'))->toBe('application/json');
+    expect($response->getHeaderLine('content-type'))->toBe('application/hal+json');
     expect($response->getStatusCode())->toBe(200);
     expect($response->getBody()->getContents())
         ->toBeJson()
         ->json()
         ->toBe([
            "id" => 1,
-           "code" => "202100000001",
+           "code" => date('Y') . "00000001",
            "cpf" => "93541134780",
-           "freight" => 1240,
+           "freight" => 1240.00,
            "orderItems" => [
                [
                    "category" => "Música",
                    "description" => "CD",
-                   "price" => 1000,
+                   "price" => 1000.0,
                ],
                [
                    "category" => "Vídeo",
                    "description" => "DVD",
-                   "price" => 50,
+                   "price" => 50.00,
                ],
                [
                    "category" => "Vídeo",
                    "description" => "VHS",
-                   "price" => 25,
+                   "price" => 25.00,
                ],
            ],
+           "_links" => [
+               "self" => [
+                   "href" => "/rest/v1/order/" . date('Y') . "00000001"
+               ]
+           ]
         ]);
 });
 
@@ -80,42 +85,87 @@ test('Deve retornar uma lista de pedidos', function () {
     );
     $this->placeOrder->execute($placeOrderInput);
     $this->placeOrder->execute($placeOrderInput);
-    $this->placeOrder->execute($placeOrderInput);
-    $serverRequest = new ServerRequest(uri: "/order", method: 'GET');
+    $serverRequest = new ServerRequest(uri: "/rest/v1/order", method: 'GET');
     $response = handle($serverRequest);
-    expect($response->getHeaderLine('content-type'))->toBe('application/json');
+    expect($response->getHeaderLine('content-type'))->toBe('application/hal+json');
     expect($response->getStatusCode())->toBe(200);
     expect($response->getBody()->getContents())
         ->toBeJson()
         ->json()
-        ->toHaveLength(3)
-        ->toContain([
-           "id" => 2,
-           "code" => "202100000002",
-           "cpf" => "93541134780",
-           "freight" => 1240,
-           "orderItems" => [
-               [
-                   "category" => "Música",
-                   "description" => "CD",
-                   "price" => 1000,
-               ],
-               [
-                   "category" => "Vídeo",
-                   "description" => "DVD",
-                   "price" => 50,
-               ],
-               [
-                   "category" => "Vídeo",
-                   "description" => "VHS",
-                   "price" => 25,
-               ],
-           ],
+        ->toBe([
+            "_total_items" => 2,
+            "_page" => 1,
+            "_page_count" => 1,
+            "_links" => [
+               "self" => [
+                   "href" => "/rest/v1/order?page=1"
+               ]
+            ],
+            "_embedded" => [
+                "get.rest.v1.order.code" => [
+                    [
+                        "id" => 1,
+                        "code" => date('Y') . "00000001",
+                        "cpf" => "93541134780",
+                        "freight" => 1240.00,
+                        "orderItems" => [
+                            [
+                                "category" => "Música",
+                                "description" => "CD",
+                                "price" => 1000.0,
+                            ],
+                            [
+                                "category" => "Vídeo",
+                                "description" => "DVD",
+                                "price" => 50.00,
+                            ],
+                            [
+                                "category" => "Vídeo",
+                                "description" => "VHS",
+                                "price" => 25.00,
+                            ],
+                        ],
+                        "_links" => [
+                            "self" => [
+                                "href" => "/rest/v1/order/" . date('Y') . "00000001"
+                            ]
+                        ]
+                    ],
+                    [
+                        "id" => 2,
+                        "code" => date('Y') . "00000002",
+                        "cpf" => "93541134780",
+                        "freight" => 1240.00,
+                        "orderItems" => [
+                            [
+                                "category" => "Música",
+                                "description" => "CD",
+                                "price" => 1000.0,
+                            ],
+                            [
+                                "category" => "Vídeo",
+                                "description" => "DVD",
+                                "price" => 50.00,
+                            ],
+                            [
+                                "category" => "Vídeo",
+                                "description" => "VHS",
+                                "price" => 25.00,
+                            ],
+                        ],
+                        "_links" => [
+                            "self" => [
+                                "href" => "/rest/v1/order/" . date('Y') . "00000002"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ]);
 });
 
 test('Deve fazer um pedido', function () {
-    $serverRequest = new ServerRequest(uri: "/order", method: 'POST', parsedBody: [
+    $serverRequest = new ServerRequest(uri: "/rest/v1/order", method: 'POST', parsedBody: [
         "cpf" => "935.411.347-80",
         "coupon" => "VALE20",
         "orderItems" => [
@@ -125,13 +175,18 @@ test('Deve fazer um pedido', function () {
         ],
     ]);
     $response = handle($serverRequest);
-    expect($response->getHeaderLine('content-type'))->toBe('application/json');
+    expect($response->getHeaderLine('content-type'))->toBe('application/hal+json');
     expect($response->getStatusCode())->toBe(201);
     expect($response->getBody()->getContents())
         ->toBeJson()
         ->json()
         ->toBe([
-           "code" => "202100000001",
-           "total" => 2365
+           "code" => date("Y") . "00000001",
+           "total" => 2365.00,
+           "_links" => [
+               "self" => [
+                   "href" => "/rest/v1/order/" . date('Y') . "00000001"
+               ]
+           ]
         ]);
 });

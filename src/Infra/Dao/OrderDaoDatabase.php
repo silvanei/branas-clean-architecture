@@ -8,6 +8,8 @@ use PDO;
 use Silvanei\BranasCleanArchitecture\Application\Dao\OrderDao;
 use Silvanei\BranasCleanArchitecture\Application\Dao\OrderDto;
 use Silvanei\BranasCleanArchitecture\Application\Dao\OrderItemsDto;
+use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorInput;
+use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorSequence;
 
 class OrderDaoDatabase implements OrderDao
 {
@@ -28,20 +30,32 @@ class OrderDaoDatabase implements OrderDao
         return $order;
     }
 
-    /**
-     * @return OrderDto[]
-     */
-    public function getOrders(): array
+    public function getOrders(PaginatorInput $paginatorInput): PaginatorSequence
     {
-        $stmt = $this->connection->prepare("SELECT id_order AS id, code, cpf, freight FROM ccca.order");
+        $stmt = $this->connection->prepare("
+            SELECT id_order AS id, code, cpf, freight 
+            FROM ccca.order
+            LIMIT :limit OFFSET :offset
+        ");
         $stmt->setFetchMode(PDO::FETCH_CLASS, OrderDto::class);
-        $stmt->execute();
+        $stmt->execute([':limit' => $paginatorInput->limit(), ':offset' => $paginatorInput->offset()]);
         /** @var OrderDto[]|false $order */
         $order = $stmt->fetchAll();
         if (! $order) {
-            return [];
+            return new PaginatorSequence();
         }
-        return $order;
+        return new PaginatorSequence($paginatorInput->page, $paginatorInput->itemCountPerPage, $this->getOrdersCount(), $order);
+    }
+
+
+    private function getOrdersCount(): int
+    {
+        $stmt = $this->connection->prepare("
+            SELECT count(1)
+            FROM ccca.order
+        ");
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
     }
 
     public function getOrderItems(string $code): ?array
