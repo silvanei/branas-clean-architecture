@@ -17,7 +17,7 @@ final class ValidateCoupon
     {
         $coupon = $this->couponRepository->findByCode($code);
         if (! $coupon) {
-            throw new InvalidArgumentException("Coupon not found");
+            throw new InvalidArgumentException("Coupon ($code) not found");
         }
         return $coupon->isValid();
     }

@@ -21,7 +21,7 @@ final class SimulateFreight
         foreach ($simulateFreightInput->items as $inputItem) {
             $item = $this->itemRepository->findById($inputItem->idItem);
             if (! $item) {
-                throw new InvalidArgumentException("Item not found");
+                throw new InvalidArgumentException("Item ($inputItem->idItem) not found");
             }
             $freightValue = $this->freightCaculator->calculate($item)->mul($inputItem->quantity);
             $amount = $amount->add($freightValue);

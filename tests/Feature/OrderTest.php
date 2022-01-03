@@ -66,10 +66,19 @@ test('Deve retornar um pedido pelo código', function () {
 });
 
 test('Deve retornas 404 para um código inválido', function () {
-    $request = new ServerRequest(uri: "/order/202100000001", method: 'GET');
+    $request = new ServerRequest(uri: "/rest/v1/order/202100000001", method: 'GET');
     $response = handle($request);
+    expect($response->getHeaderLine('content-type'))->toBe('application/problem+json');
     expect($response->getStatusCode())->toBe(404);
-    expect($response->getBody()->getContents())->toBeEmpty();
+    expect($response->getBody()->getContents())
+        ->toBeJson()
+        ->json()
+        ->toBe([
+            "title" => "Not Found",
+            "type" => "https://httpstatus.es/404",
+            "status" => 404,
+            "detail" => "Order (202100000001) not found"
+        ]);
 });
 
 test('Deve retornar uma lista de pedidos', function () {

@@ -14,6 +14,7 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Mezzio\ProblemDetails\ConfigProvider::class,
     \Laminas\Paginator\ConfigProvider::class,
     \Laminas\Hydrator\ConfigProvider::class,
     \Mezzio\Hal\ConfigProvider::class,

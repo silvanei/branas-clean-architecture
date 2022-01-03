@@ -33,20 +33,7 @@ final class RenderResourceMiddleware implements MiddlewareInterface
                     $request,
                     $resource
                 );
-                $response = $response->withStatus($result->getStatusCode());
-                $response->getBody()->rewind();
-                return $response;
-            }
-
-            if (is_array($data)) {
-                $resource = $this->resourceGenerator->fromArray($data);
-                $response = $this->responseFactory->createResponse(
-                    $request,
-                    $resource
-                );
-                $response = $response->withStatus($result->getStatusCode());
-                $response->getBody()->rewind();
-                return $response;
+                return $response->withStatus($result->getStatusCode());
             }
         }
 

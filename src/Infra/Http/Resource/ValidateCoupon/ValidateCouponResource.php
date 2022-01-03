@@ -9,6 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\ValidateCoupon\ValidateCoupon;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\AbstractResource;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ProblemDetailsException;
+use Throwable;
 
 final class ValidateCouponResource extends AbstractResource
 {
@@ -19,10 +21,14 @@ final class ValidateCouponResource extends AbstractResource
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $code = $request->getAttributes()['code'] ?? '';
-        $isValid = $this->validateCoupon->execute($code);
-        return new JsonResponse([
-            'code' => $code,
-            'isValid' => $isValid,
-        ]);
+        try {
+            $isValid = $this->validateCoupon->execute($code);
+            return new JsonResponse([
+                'code' => $code,
+                'isValid' => $isValid,
+            ]);
+        } catch (Throwable $exception) {
+            throw ProblemDetailsException::badRequest($exception->getMessage());
+        }
     }
 }

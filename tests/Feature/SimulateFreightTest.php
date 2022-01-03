@@ -15,3 +15,21 @@ test('Deve simular o custo com frete', function () {
         ->json()
         ->toBe(["amount" => 260]);
 });
+
+test('Deve retornar um 400 se um item não existir', function () {
+    $request = new ServerRequest(uri: "/rest/v1/simulate-freight", method: 'POST', parsedBody: [
+        ["idItem" => 400000, "quantity" => 1]
+    ]);
+    $response = handle($request);
+    expect($response->getHeaderLine('content-type'))->toBe('application/problem+json');
+    expect($response->getStatusCode())->toBe(400);
+    expect($response->getBody()->getContents())
+        ->toBeJson()
+        ->json()
+        ->toBe([
+            "title" => "Bad request",
+            "type" => "https://httpstatuses.com/400",
+            "status" => 400,
+            "detail" => "Item (400000) not found"
+        ]);
+});

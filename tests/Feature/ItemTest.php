@@ -23,6 +23,22 @@ test('Deve retornar um item pelo ID', function () {
         ]);
 });
 
+test('Deve retornas 404 para um id inválido', function () {
+    $request = new ServerRequest(uri: "/rest/v1/item/1000000", method: 'GET');
+    $response = handle($request);
+    expect($response->getHeaderLine('content-type'))->toBe('application/problem+json');
+    expect($response->getStatusCode())->toBe(404);
+    expect($response->getBody()->getContents())
+        ->toBeJson()
+        ->json()
+        ->toBe([
+            "title" => "Not Found",
+            "type" => "https://httpstatus.es/404",
+            "status" => 404,
+            "detail" => "Item (1000000) not found"
+        ]);
+});
+
 test('Deve retornar uma lista de items', function () {
     $serverRequest = new ServerRequest(uri: "/rest/v1/item", method: 'GET');
     $response = handle($serverRequest);

@@ -29,7 +29,8 @@
         "laminas/laminas-cli": "^1.4",
         "mezzio/mezzio-hal": "^2.3",
         "laminas/laminas-hydrator": "^4.3",
-        "laminas/laminas-paginator": "^2.12"
+        "laminas/laminas-paginator": "^2.12",
+        "mezzio/mezzio-problem-details": "^1.5"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

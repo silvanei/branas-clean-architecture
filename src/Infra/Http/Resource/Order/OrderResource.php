@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Silvanei\BranasCleanArchitecture\Infra\Http\Resource\Order;
 
 use DateTimeImmutable;
-use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Silvanei\BranasCleanArchitecture\Application\Query\Order\GetOrder;
@@ -16,7 +15,9 @@ use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderIn
 use Silvanei\BranasCleanArchitecture\Application\UseCase\PlaceOrder\PlaceOrderInputItem;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\AbstractResource;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\PaginatorSequenceAdapter;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ProblemDetailsException;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ResourceResponse;
+use Throwable;
 
 final class OrderResource extends AbstractResource
 {
@@ -32,7 +33,7 @@ final class OrderResource extends AbstractResource
         }
         $response = $this->getOrder->execute($code);
         if (! $response) {
-            return new EmptyResponse(404);
+            throw ProblemDetailsException::notFound("Order ($code) not found");
         }
         return new ResourceResponse($response, 200);
     }
@@ -52,17 +53,21 @@ final class OrderResource extends AbstractResource
     public function post(ServerRequestInterface $request): ResponseInterface
     {
         $params = (array)$request->getParsedBody();
-        $orderItems = array_map(
-            fn($item) => new PlaceOrderInputItem($item['idItem'], $item['quantity']),
-            $params['orderItems']
-        );
-        $placeOrderInput = new PlaceOrderInput(
-            cpf: $params['cpf'],
-            orderItems: $orderItems,
-            date: new DateTimeImmutable(),
-            coupon: $params['coupon'] ?? ''
-        );
-        $response = (array)$this->placeOrder->execute($placeOrderInput);
-        return new ResourceResponse(new PostOrderOutput(...$response), 201);
+        try {
+            $orderItems = array_map(
+                fn($item) => new PlaceOrderInputItem($item['idItem'], $item['quantity']),
+                $params['orderItems']
+            );
+            $placeOrderInput = new PlaceOrderInput(
+                cpf: $params['cpf'],
+                orderItems: $orderItems,
+                date: new DateTimeImmutable(),
+                coupon: $params['coupon'] ?? ''
+            );
+            $response = (array)$this->placeOrder->execute($placeOrderInput);
+            return new ResourceResponse(new PostOrderOutput(...$response), 201);
+        } catch (Throwable $exception) {
+            throw ProblemDetailsException::badRequest($exception->getMessage());
+        }
     }
 }

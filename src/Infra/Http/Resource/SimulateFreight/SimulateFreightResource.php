@@ -11,6 +11,8 @@ use Silvanei\BranasCleanArchitecture\Application\UseCase\SimulateFreight\Simulat
 use Silvanei\BranasCleanArchitecture\Application\UseCase\SimulateFreight\SimulateFreightInput;
 use Silvanei\BranasCleanArchitecture\Application\UseCase\SimulateFreight\SimulateFreightInputItem;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\AbstractResource;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ProblemDetailsException;
+use Throwable;
 
 final class SimulateFreightResource extends AbstractResource
 {
@@ -20,12 +22,16 @@ final class SimulateFreightResource extends AbstractResource
 
     public function post(ServerRequestInterface $request): ResponseInterface
     {
-        $simulateFreitghtItens = array_map(
-            callback: fn($item) => new SimulateFreightInputItem(idItem: $item['idItem'], quantity: $item['quantity']),
-            array: (array)$request->getParsedBody()
-        );
-        $inputData = new SimulateFreightInput(...$simulateFreitghtItens);
-        $result = (array)$this->simulateFreight->execute($inputData);
-        return new JsonResponse($result);
+        try {
+            $simulateFreitghtItens = array_map(
+                callback: fn($item) => new SimulateFreightInputItem(idItem: $item['idItem'], quantity: $item['quantity']),
+                array: (array)$request->getParsedBody()
+            );
+            $inputData = new SimulateFreightInput(...$simulateFreitghtItens);
+            $result = (array)$this->simulateFreight->execute($inputData);
+            return new JsonResponse($result);
+        } catch (Throwable $exception) {
+            throw ProblemDetailsException::badRequest($exception->getMessage());
+        }
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Silvanei\BranasCleanArchitecture\Infra\Http\Resource\Item;
 
-use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Silvanei\BranasCleanArchitecture\Application\Query\Item\GetItem;
@@ -12,6 +11,7 @@ use Silvanei\BranasCleanArchitecture\Application\Query\Item\GetItems;
 use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorInput;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\AbstractResource;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\PaginatorSequenceAdapter;
+use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ProblemDetailsException;
 use Silvanei\BranasCleanArchitecture\Infra\Http\Resource\ResourceResponse;
 
 final class ItemResource extends AbstractResource
@@ -28,7 +28,7 @@ final class ItemResource extends AbstractResource
         }
         $item = $this->getItem->execute((int)$id);
         if (! $item) {
-            return new EmptyResponse(404);
+            throw ProblemDetailsException::notFound("Item ($id) not found");
         }
         return new ResourceResponse($item, 200);
     }

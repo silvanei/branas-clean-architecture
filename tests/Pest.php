@@ -67,5 +67,7 @@ function handle(ServerRequestInterface $serverRequest): ResponseInterface
     (require __DIR__ . '/../config/pipeline.php')($app, $factory, $container);
     (require __DIR__ . '/../config/routes.php')($app, $factory, $container);
 
-    return $app->handle($serverRequest);
+    $response = $app->handle($serverRequest);
+    $response->getBody()->rewind();
+    return $response;
 }

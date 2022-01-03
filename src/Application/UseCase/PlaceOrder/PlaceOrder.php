@@ -28,7 +28,7 @@ final class PlaceOrder
         foreach ($input->orderItems as $orderItem) {
             $item = $this->itemRepository->findById($orderItem->idItem);
             if (! $item) {
-                throw new InvalidArgumentException("Item not found");
+                throw new InvalidArgumentException("Item ($orderItem->idItem) not found");
             }
             $order->add($item, $orderItem->quantity);
         }
