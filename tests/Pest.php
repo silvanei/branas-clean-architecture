@@ -71,3 +71,11 @@ function handle(ServerRequestInterface $serverRequest): ResponseInterface
     $response->getBody()->rewind();
     return $response;
 }
+
+function clearOrder(): void
+{
+    $connection = loadObject(PDO::class);
+    $connection->query('truncate table ccca.order_item restart identity');
+    $connection->query('truncate table ccca.order restart identity');
+    $connection->query("select setval('ccca.order_sequence', 1, false)");
+}

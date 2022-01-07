@@ -11,10 +11,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    $connection = loadObject(PDO::class);
-    $connection->query('truncate table ccca.order_item restart identity');
-    $connection->query('truncate table ccca.order restart identity');
-    $connection->query("select setval('ccca.order_sequence', 1, false)");
+    clearOrder();
 });
 
 test('Deve fazer uma pedido', function () {
