@@ -10,6 +10,7 @@ use Silvanei\BranasCleanArchitecture\Application\Dao\OrderDto;
 use Silvanei\BranasCleanArchitecture\Application\Dao\OrderItemsDto;
 use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorInput;
 use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorSequence;
+use Silvanei\BranasCleanArchitecture\Infra\Database\PDODataMapper;
 
 class OrderDaoDatabase implements OrderDao
 {
@@ -20,14 +21,13 @@ class OrderDaoDatabase implements OrderDao
     public function getOrder(string $code): ?OrderDto
     {
         $stmt = $this->connection->prepare("SELECT id_order AS id, code, cpf, freight FROM ccca.order WHERE code = :code");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderDto::class);
         $stmt->execute([':code' => $code]);
-        /** @var OrderDto|false $order */
-        $order = $stmt->fetch();
+        /** @var array<string, string>|false $order */
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
         if (! $order) {
             return null;
         }
-        return $order;
+        return PDODataMapper::map(OrderDto::class, $order);
     }
 
     public function getOrders(PaginatorInput $paginatorInput): PaginatorSequence
@@ -37,13 +37,13 @@ class OrderDaoDatabase implements OrderDao
             FROM ccca.order
             LIMIT :limit OFFSET :offset
         ");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderDto::class);
         $stmt->execute([':limit' => $paginatorInput->limit(), ':offset' => $paginatorInput->offset()]);
-        /** @var OrderDto[]|false $order */
+        /** @var array<string, string>[]|false $order */
         $order = $stmt->fetchAll();
         if (! $order) {
             return new PaginatorSequence();
         }
+        $order = PDODataMapper::arrayMap(OrderDto::class, $order);
         return new PaginatorSequence($paginatorInput->page, $paginatorInput->itemCountPerPage, $this->getOrdersCount(), $order);
     }
 
@@ -67,13 +67,12 @@ class OrderDaoDatabase implements OrderDao
             INNER JOIN ccca.item i ON i.id_item = oi.id_item
             WHERE o.code = :code
         ");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItemsDto::class);
         $stmt->execute([':code' => $code]);
-        /** @var ?OrderItemsDto[] $orderItems */
+        /** @var array<string, string>[]|false $orderItems */
         $orderItems = $stmt->fetchAll();
         if (! $orderItems) {
             return null;
         }
-        return $orderItems;
+        return PDODataMapper::arrayMap(OrderItemsDto::class, $orderItems);
     }
 }

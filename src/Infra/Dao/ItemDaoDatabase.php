@@ -9,6 +9,7 @@ use Silvanei\BranasCleanArchitecture\Application\Dao\ItemDao;
 use Silvanei\BranasCleanArchitecture\Application\Dao\ItemDto;
 use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorInput;
 use Silvanei\BranasCleanArchitecture\Application\Query\PaginatorSequence;
+use Silvanei\BranasCleanArchitecture\Infra\Database\PDODataMapper;
 
 class ItemDaoDatabase implements ItemDao
 {
@@ -23,14 +24,13 @@ class ItemDaoDatabase implements ItemDao
             FROM ccca.item
             WHERE id_item = :id
         ");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, ItemDto::class);
         $stmt->execute([':id' => $id]);
-        /** @var ?ItemDto $item */
-        $item = $stmt->fetch();
-        if (! $item) {
+        /** @var array<string, string> $data */
+        $data = $stmt->fetch();
+        if (! $data) {
             return null;
         }
-        return $item;
+        return PDODataMapper::map(ItemDto::class, $data);
     }
 
     public function getItems(PaginatorInput $paginatorInput): PaginatorSequence
@@ -40,13 +40,13 @@ class ItemDaoDatabase implements ItemDao
             FROM ccca.item
             LIMIT :limit OFFSET :offset
         ");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, ItemDto::class);
         $stmt->execute([':limit' => $paginatorInput->limit(), ':offset' => $paginatorInput->offset()]);
-        /** @var ?ItemDto[] $items */
-        $items = $stmt->fetchAll();
-        if (! $items) {
+        /** @var array<string, string>[] $data */
+        $data = $stmt->fetchAll();
+        if (! $data) {
             return new PaginatorSequence();
         }
+        $items = PDODataMapper::arrayMap(ItemDto::class, $data);
         return new PaginatorSequence($paginatorInput->page, $paginatorInput->itemCountPerPage, $this->getItemsCount(), $items);
     }
 

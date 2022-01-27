@@ -8,6 +8,7 @@ use Decimal\Decimal;
 use PDO;
 use Silvanei\BranasCleanArchitecture\Domain\Entity\Item;
 use Silvanei\BranasCleanArchitecture\Domain\Repository\ItemRepository;
+use Silvanei\BranasCleanArchitecture\Infra\Database\PDODataMapper;
 use Silvanei\BranasCleanArchitecture\Infra\Repository\Database\Dto\ItemDto;
 
 final class ItemRepositoryDatabase implements ItemRepository
@@ -19,13 +20,13 @@ final class ItemRepositoryDatabase implements ItemRepository
     public function findById(int $id): ?Item
     {
         $stmt = $this->connection->prepare("SELECT * FROM ccca.item WHERE id_item = :id_item");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, ItemDto::class);
         $stmt->execute([':id_item' => $id]);
-        /** @var ItemDto|false $item */
-        $item = $stmt->fetch();
-        if (! $item) {
+        /** @var array<string, string>|false $data */
+        $data = $stmt->fetch();
+        if (! $data) {
             return null;
         }
+        $item = PDODataMapper::map(ItemDto::class, $data);
         return new Item(
             $item->id_item,
             $item->category,

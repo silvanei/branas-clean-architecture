@@ -6,7 +6,10 @@ namespace Silvanei\BranasCleanArchitecture\Application\Dao;
 
 class OrderItemsDto
 {
-    public readonly string $category;
-    public readonly string $description;
-    public readonly float $price;
+    public function __construct(
+        public readonly string $category,
+        public readonly string $description,
+        public readonly float $price,
+    ) {
+    }
 }

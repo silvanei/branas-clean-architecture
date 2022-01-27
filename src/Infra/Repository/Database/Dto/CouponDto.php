@@ -6,7 +6,10 @@ namespace Silvanei\BranasCleanArchitecture\Infra\Repository\Database\Dto;
 
 class CouponDto
 {
-    public readonly string $code;
-    public readonly int $percentage;
-    public readonly string $expire_date;
+    public function __construct(
+        public readonly string $code,
+        public readonly int $percentage,
+        public readonly string $expire_date,
+    ) {
+    }
 }

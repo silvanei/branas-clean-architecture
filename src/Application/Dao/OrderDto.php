@@ -6,8 +6,11 @@ namespace Silvanei\BranasCleanArchitecture\Application\Dao;
 
 class OrderDto
 {
-    public readonly int $id;
-    public readonly string $code;
-    public readonly string $cpf;
-    public readonly float $freight;
+    public function __construct(
+        public readonly int $id,
+        public readonly string $code,
+        public readonly string $cpf,
+        public readonly float $freight,
+    ) {
+    }
 }
