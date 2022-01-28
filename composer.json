@@ -8,6 +8,11 @@
             "Silvanei\\BranasCleanArchitecture\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Silvanei\\BranasCleanArchitecture\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Silvanei Santos",
